@@ -32,23 +32,23 @@ public class Medicine implements Serializable {
     private String factoryLaboratory;
 
     @Column(name = "manufacturing_date")
-    @NotBlank
     @PastOrPresent
+    @NotNull
     private LocalDate manufacturingDate;
 
     @Column(name = "due_date")
-    @NotBlank
-    @PastOrPresent
+    @FutureOrPresent
+    @NotNull
     private LocalDate dueDate;
 
     @Column(name = "stock")
-    @NotBlank
     @Min(value = 0L)
-    Short stock;
+    @NotNull
+    Integer stock;
 
     @Column(name = "unit_price")
-    @NotBlank
     @DecimalMin(value = "0.0")
+    @NotNull
     Double unitPrice;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP")

@@ -20,17 +20,18 @@ public class Sale implements Serializable {
     private Long id;
 
     @Column(name = "sale_datetime")
-    @NotBlank
+    @FutureOrPresent
+    @NotNull
     private LocalDateTime saleDateTime;
 
     @Column(name = "quantity")
     @Min(value = 0L)
-    @NotBlank
-    private Short quantity;
+    @NotNull
+    private Integer quantity;
 
     @Column(name = "total_price")
-    @NotBlank
     @DecimalMin(value = "0.0")
+    @NotNull
     Double totalPrice;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP")
