@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+    database:
+        image: postgres
+        ports:
+         - "5432:5432"
+        restart: always
+        environment:
+          POSTGRES_USER: konnex
+          POSTGRES_PASSWORD: konnex
+          POSTGRES_DB: medicine_administration
