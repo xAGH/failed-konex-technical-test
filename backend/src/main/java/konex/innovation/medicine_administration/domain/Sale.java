@@ -2,8 +2,6 @@ package konex.innovation.medicine_administration.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -25,10 +23,6 @@ public class Sale implements Serializable {
     @NotBlank
     private LocalDateTime saleDateTime;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id")
-    private List<Medicine> medicines = new ArrayList<Medicine>();
-
     @Column(name = "quantity")
     @Min(value = 0L)
     @NotBlank
@@ -47,5 +41,10 @@ public class Sale implements Serializable {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    // Relations
+    @ManyToOne()
+    @JoinColumn(name = "medicine_id")
+    private Medicine medicine;
 
 }
