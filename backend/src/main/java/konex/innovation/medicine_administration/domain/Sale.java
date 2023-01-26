@@ -1,8 +1,9 @@
-package konnex.innovation.medicine_administration.domain;
+package konex.innovation.medicine_administration.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -10,8 +11,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "medicine")
-public class Medicine implements Serializable {
+@Table(name = "sale")
+public class Sale implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,35 +21,23 @@ public class Medicine implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "sale_datetime")
     @NotBlank
-    @Size(min = 2, max = 150)
-    private String name;
+    private LocalDateTime saleDateTime;
 
-    @Column(name = "factory_laboratory")
-    @NotBlank
-    @Size(min = 2, max = 255)
-    private String factoryLaboratory;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id")
+    private List<Medicine> medicines = new ArrayList<Medicine>();
 
-    @Column(name = "manufacturing_date")
-    @NotBlank
-    @PastOrPresent
-    private LocalDate manufacturingDate;
-
-    @Column(name = "due_date")
-    @NotBlank
-    @PastOrPresent
-    private LocalDate dueDate;
-
-    @Column(name = "stock")
-    @NotBlank
+    @Column(name = "quantity")
     @Min(value = 0L)
-    Short stock;
+    @NotBlank
+    private Short quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "total_price")
     @NotBlank
     @DecimalMin(value = "0.0")
-    Double unitPrice;
+    Double totalPrice;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
