@@ -49,10 +49,4 @@ public class SaleServiceImp implements CrudService<Sale> {
         return dao.save(entity);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Sale findByName(String name) {
-        return null;
-    }
-
 }

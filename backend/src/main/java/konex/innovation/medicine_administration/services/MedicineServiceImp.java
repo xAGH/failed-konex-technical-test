@@ -11,7 +11,7 @@ import konex.innovation.medicine_administration.dao.MedicineDao;
 import konex.innovation.medicine_administration.domain.Medicine;
 
 @Service
-public class MedicineServiceImp implements CrudService<Medicine> {
+public class MedicineServiceImp implements MedicineService {
 
     @Resource
     private MedicineDao dao;
@@ -20,12 +20,6 @@ public class MedicineServiceImp implements CrudService<Medicine> {
     @Override
     public ArrayList<Medicine> list() {
         ArrayList<Medicine> medicines = (ArrayList<Medicine>) dao.findAll();
-        for (Medicine medicine : medicines) {
-            // Verifica que los datos traidos no tengan fecha de eliminacion
-            if (medicine.getDeletedAt() != null) {
-                medicines.remove(medicine);
-            }
-        }
         return medicines;
     }
 

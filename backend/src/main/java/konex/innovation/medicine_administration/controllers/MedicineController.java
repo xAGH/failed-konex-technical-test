@@ -97,7 +97,7 @@ public class MedicineController extends ExceptionHandlerController {
         log.info(String.format("Medicine with id %d has been deleted. Data: %s", id, medicine.toString()));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ResponseDto(true, "Medicine has been updated", service.save(medicine)));
+                .body(new ResponseDto(true, "Medicine has been deleted", service.save(medicine)));
     }
 
     private ResponseEntity<ResponseDto> notFound(Long id) {

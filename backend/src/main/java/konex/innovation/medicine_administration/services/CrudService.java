@@ -8,8 +8,6 @@ public interface CrudService<T> {
 
     public T findById(Long id);
 
-    public T findByName(String name);
-
     public T save(T entity);
 
     public T delete(T entity);
