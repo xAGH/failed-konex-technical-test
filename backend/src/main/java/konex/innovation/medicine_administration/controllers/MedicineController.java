@@ -30,10 +30,10 @@ public class MedicineController extends ExceptionHandlerController {
             @RequestParam(value = "offset", defaultValue = "10") Integer offset,
             @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
             @RequestParam(value = "filterBy", defaultValue = "") List<String> filterBy,
-            @RequestParam(value = "value", defaultValue = "") List<Object> value) {
+            @RequestParam(value = "value", defaultValue = "") List<String> value) {
 
         Page<Medicine> medicines;
-        String[] fields = new String[] {
+        String[] fieldsToSort = new String[] {
                 "id",
                 "name",
                 "factoryLaboratory",
@@ -42,9 +42,18 @@ public class MedicineController extends ExceptionHandlerController {
                 "stock",
                 "unitPrice"
         };
+
+        String[] fieldsToFilter = new String[] {
+                "id",
+                "name",
+                "factoryLaboratory",
+                "stock",
+                "unitPrice"
+        };
+
         // Validacion de que el campo mandado en sortBy sea alguno de los campos de la
         // entidad
-        sortBy = Arrays.stream(fields).anyMatch(sortBy::equals) ? sortBy : "id";
+        sortBy = Arrays.stream(fieldsToSort).anyMatch(sortBy::equals) ? sortBy : "id";
 
         // Validacion de que cada uno de los filtros sea alguno de los campos de la
         // entidad
@@ -52,7 +61,7 @@ public class MedicineController extends ExceptionHandlerController {
         Boolean filtersAreValid = true && filterBy.size() > 0 && filterBy.size() == value.size();
         if (filtersAreValid)
             for (String filter : filterBy) {
-                if (!(Arrays.stream(fields).anyMatch(filter::equals))) {
+                if (!(Arrays.stream(fieldsToFilter).anyMatch(filter::equals))) {
                     filtersAreValid = false;
                 }
             }
