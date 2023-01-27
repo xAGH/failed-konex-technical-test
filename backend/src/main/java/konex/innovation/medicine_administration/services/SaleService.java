@@ -1,9 +1,11 @@
 package konex.innovation.medicine_administration.services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,20 +20,23 @@ public class SaleService {
     private SaleRepository repository;
 
     @Transactional(readOnly = true)
-    public List<Sale> list() {
-        ArrayList<Sale> sales = (ArrayList<Sale>) repository.findAll();
-        for (Sale sale : sales) {
-            // Verifica que los datos traidos no tengan fecha de eliminacion
-            if (!sale.getDeletedAt().isEqual(null)) {
-                sales.remove(sale);
-            }
-        }
-        return sales;
+    public Page<Sale> list(Integer page, Integer offset, String sortBy) {
+        return repository.findAll(PageRequest.of(page, offset).withSort(Sort.by(sortBy)));
     }
 
     @Transactional(readOnly = true)
     public Sale findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public Page<Sale> findBewteenDates(
+            Integer page,
+            Integer offset,
+            String sortBy,
+            LocalDateTime start,
+            LocalDateTime end) {
+        return repository.findBewteenDates(start, end, PageRequest.of(page, offset).withSort(Sort.by(sortBy)));
     }
 
     @Transactional

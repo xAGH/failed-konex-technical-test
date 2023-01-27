@@ -3,10 +3,22 @@ package konex.innovation.medicine_administration.domain;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import org.apache.commons.math3.util.Precision;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -62,8 +74,9 @@ public class Medicine implements Serializable {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    // Relations
-    @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sale> sales;
+    // Custom Setters
+    public void setUnitPrice(Double value) {
+        this.unitPrice = Precision.round(value, 3);
+    }
 
 }

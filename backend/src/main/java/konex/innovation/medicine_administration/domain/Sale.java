@@ -31,7 +31,6 @@ public class Sale implements Serializable {
 
     @Column(name = "unit_price")
     @DecimalMin(value = "0.0")
-    @NotNull
     Double unitPrice;
 
     @Column(name = "total_price")
@@ -39,9 +38,10 @@ public class Sale implements Serializable {
     private Double totalPrice;
 
     // Relations
-    @ManyToOne()
-    @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
+    @Column(name = "medicine_id")
+    @NotNull
+    @Min(value = 0L)
+    private Long medicineId;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();

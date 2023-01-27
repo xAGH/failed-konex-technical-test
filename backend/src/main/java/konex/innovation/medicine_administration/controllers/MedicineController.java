@@ -74,19 +74,6 @@ public class MedicineController extends ExceptionHandlerController {
                 .body(new ResponseDto(true, "Medicines List", medicines));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getOne(@PathVariable Long id) {
-        Medicine medicine = service.findById(id);
-        if (medicine == null) {
-            return notFound(id);
-        }
-
-        log.info(String.format("Medicine found with id %d: %s", id, medicine.toString()));
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseDto(true, null, medicine));
-    }
-
     @PostMapping
     public ResponseEntity<ResponseDto> save(@Valid @RequestBody Medicine body) {
         Medicine medicine = service.matchByNameAndByLaboratory(body.getName(), body.getFactoryLaboratory());
