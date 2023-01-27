@@ -8,19 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.Resource;
-import konex.innovation.medicine_administration.dao.SaleDao;
 import konex.innovation.medicine_administration.domain.Sale;
+import konex.innovation.medicine_administration.repository.SaleRepository;
 
 @Service
-public class SaleServiceImp implements CrudService<Sale> {
+public class SaleService {
 
     @Resource
-    private SaleDao dao;
+    private SaleRepository repository;
 
-    @Override
     @Transactional(readOnly = true)
     public List<Sale> list() {
-        ArrayList<Sale> sales = (ArrayList<Sale>) dao.findAll();
+        ArrayList<Sale> sales = (ArrayList<Sale>) repository.findAll();
         for (Sale sale : sales) {
             // Verifica que los datos traidos no tengan fecha de eliminacion
             if (!sale.getDeletedAt().isEqual(null)) {
@@ -30,23 +29,24 @@ public class SaleServiceImp implements CrudService<Sale> {
         return sales;
     }
 
-    @Override
     @Transactional(readOnly = true)
     public Sale findById(Long id) {
-        return dao.findById(id).orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
-    @Override
     @Transactional
     public Sale save(Sale entity) {
-        return dao.save(entity);
+        return repository.save(entity);
     }
 
-    @Override
     @Transactional
     public Sale delete(Sale entity) {
         entity.setDeletedAt(LocalDateTime.now());
-        return dao.save(entity);
+        return repository.save(entity);
+    }
+
+    public void saveAll(List<Sale> entities) {
+        repository.saveAll(entities);
     }
 
 }

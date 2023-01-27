@@ -8,10 +8,12 @@ import java.util.List;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "medicine")
+@NoArgsConstructor
 public class Medicine implements Serializable {
 
     private static final long serialVersionUID = 1L;

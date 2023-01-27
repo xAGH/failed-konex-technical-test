@@ -1,8 +1,10 @@
 package konex.innovation.medicine_administration.controllers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +13,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import konex.innovation.medicine_administration.domain.Medicine;
 import konex.innovation.medicine_administration.dto.web.ResponseDto;
-import konex.innovation.medicine_administration.services.MedicineServiceImp;
+import konex.innovation.medicine_administration.services.MedicineService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,12 +22,44 @@ import lombok.extern.slf4j.Slf4j;
 public class MedicineController extends ExceptionHandlerController {
 
     @Resource
-    private MedicineServiceImp service;
+    private MedicineService service;
 
     @GetMapping()
-    public ResponseEntity<ResponseDto> getAll() {
-        ArrayList<Medicine> medicines = service.list();
-        log.info("Medicine created: " + medicines.toString());
+    public ResponseEntity<ResponseDto> getAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "offset", defaultValue = "10") Integer offset,
+            @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
+            @RequestParam(value = "filterBy", defaultValue = "") List<String> filterBy,
+            @RequestParam(value = "value", defaultValue = "") List<Object> value) {
+
+        Page<Medicine> medicines;
+        String[] fields = new String[] {
+                "id",
+                "name",
+                "factoryLaboratory",
+                "manufacturingDate",
+                "dueDate",
+                "stock",
+                "unitPrice"
+        };
+        // Validacion de que el campo mandado en sortBy sea alguno de los campos de la
+        // entidad
+        sortBy = Arrays.stream(fields).anyMatch(sortBy::equals) ? sortBy : "id";
+
+        // Validacion de que cada uno de los filtros sea alguno de los campos de la
+        // entidad
+
+        Boolean filtersAreValid = true && filterBy.size() > 0 && filterBy.size() == value.size();
+        if (filtersAreValid)
+            for (String filter : filterBy) {
+                if (!(Arrays.stream(fields).anyMatch(filter::equals))) {
+                    filtersAreValid = false;
+                }
+            }
+        medicines = filtersAreValid
+                ? service.list(page, offset, sortBy, filterBy, value)
+                : service.list(page, offset, sortBy);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseDto(true, "Medicines List", medicines));
@@ -46,7 +80,7 @@ public class MedicineController extends ExceptionHandlerController {
 
     @PostMapping
     public ResponseEntity<ResponseDto> save(@Valid @RequestBody Medicine body) {
-        Medicine medicine = service.findByName(body.getName());
+        Medicine medicine = service.matchByNameAndByLaboratory(body.getName(), body.getFactoryLaboratory());
         String message;
         if (medicine != null) {
             Integer previousStock = medicine.getStock();
