@@ -1,24 +1,5 @@
 package konex.innovation.medicine_administration.services;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.github.javafaker.Faker;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import konex.innovation.medicine_administration.domain.Medicine;
 import konex.innovation.medicine_administration.repository.MedicineRepository;
 
@@ -77,6 +58,30 @@ public class MedicineService {
     @Transactional
     public void saveAll(List<Medicine> entities) {
         repository.saveAll(entities);
+    }
+
+    @Transactional
+    public void saveAll(List<Medicine> entities) {
+        repository.saveAll(entities);
+    }
+
+    @PostConstruct
+    public void createData() {
+        Faker faker = new Faker();
+        ArrayList<Medicine> data = new ArrayList<Medicine>();
+        for (int i = 0; i < 50; i++) {
+            Medicine medicine = new Medicine();
+            medicine.setName(faker.name().lastName());
+            medicine.setFactoryLaboratory(faker.company().name());
+            medicine.setManufacturingDate(
+                    faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            medicine.setDueDate(
+                    faker.date().future(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            medicine.setStock(new Random().nextInt(1, 200));
+            medicine.setUnitPrice(new Random().nextDouble(1000, 10000));
+            data.add(medicine);
+        }
+        saveAll(data);
     }
 
     @PostConstruct
