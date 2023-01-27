@@ -20,7 +20,7 @@ public class Sale implements Serializable {
     private Long id;
 
     @Column(name = "sale_datetime")
-    @FutureOrPresent
+    @PastOrPresent
     @NotNull
     private LocalDateTime saleDateTime;
 
@@ -29,10 +29,19 @@ public class Sale implements Serializable {
     @NotNull
     private Integer quantity;
 
-    @Column(name = "total_price")
+    @Column(name = "unit_price")
     @DecimalMin(value = "0.0")
     @NotNull
-    Double totalPrice;
+    Double unitPrice;
+
+    @Column(name = "total_price")
+    @DecimalMin(value = "0.0")
+    private Double totalPrice;
+
+    // Relations
+    @ManyToOne()
+    @JoinColumn(name = "medicine_id")
+    private Medicine medicine;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -42,10 +51,5 @@ public class Sale implements Serializable {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    // Relations
-    @ManyToOne()
-    @JoinColumn(name = "medicine_id")
-    private Medicine medicine;
 
 }
