@@ -1,0 +1,4 @@
+::ng-deep .delete-toast {
+  background-color: rgba(224, 255, 85, 0.7);
+  font-size: 1.3rem;
+}

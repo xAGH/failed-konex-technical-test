@@ -1,7 +1,6 @@
 package konex.innovation.medicine_administration.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.apache.commons.math3.util.Precision;
@@ -13,11 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,14 +43,12 @@ public class Medicine implements Serializable {
     private String factoryLaboratory;
 
     @Column(name = "manufacturing_date")
-    @PastOrPresent
     @NotNull
-    private LocalDate manufacturingDate;
+    private Long manufacturingDate;
 
     @Column(name = "due_date")
-    @FutureOrPresent
     @NotNull
-    private LocalDate dueDate;
+    private Long dueDate;
 
     @Column(name = "stock")
     @Min(value = 0L)

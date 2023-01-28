@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import konex.innovation.medicine_administration.dto.error.ErrorModelDto;
 import konex.innovation.medicine_administration.dto.error.ErrorResponseDto;
 import konex.innovation.medicine_administration.dto.web.ResponseDto;
 
+@CrossOrigin(origins = "*")
 @ControllerAdvice
 public class ExceptionHandlerController {
 
@@ -48,4 +50,5 @@ public class ExceptionHandlerController {
                 .body(new ResponseDto(false, "Body not sent", null));
 
     }
+
 }

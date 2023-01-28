@@ -1,6 +1,5 @@
 package konex.innovation.medicine_administration.controllers;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.apache.commons.math3.util.Precision;
@@ -38,8 +37,8 @@ public class SaleController extends ExceptionHandlerController {
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "offset", defaultValue = "10") Integer offset,
             @RequestParam(value = "sortBy", defaultValue = "") String sortBy,
-            @RequestParam(value = "filterStartDate", defaultValue = "") String filterStartDate,
-            @RequestParam(value = "filterEndDate", defaultValue = "") String filterEndDate) {
+            @RequestParam(value = "filterStartDate", defaultValue = "0") Long filterStartDate,
+            @RequestParam(value = "filterEndDate", defaultValue = "0") Long filterEndDate) {
 
         String[] fieldsToSort = new String[] {
                 "id",
@@ -51,10 +50,10 @@ public class SaleController extends ExceptionHandlerController {
         };
         sortBy = Arrays.stream(fieldsToSort).anyMatch(sortBy::equals) ? sortBy : "id";
 
-        if (isLocalDateTime(filterStartDate) && isLocalDateTime(filterEndDate)) {
+        if (filterStartDate != 0 && filterEndDate != 0) {
             Page<Sale> sales = service.findBewteenDates(page, offset,
-                    sortBy, LocalDateTime.parse(filterStartDate),
-                    LocalDateTime.parse(filterEndDate));
+                    sortBy, filterStartDate,
+                    filterEndDate);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new ResponseDto(true, "Sales List", sales));
@@ -114,16 +113,6 @@ public class SaleController extends ExceptionHandlerController {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ResponseDto(false, String.format("Medicine with id %d not found", id),
                         null));
-    }
-
-    private Boolean isLocalDateTime(String date) {
-        try {
-            LocalDateTime.parse(date);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
     }
 
 }

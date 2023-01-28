@@ -1,0 +1,36 @@
+<ng-container *ngIf="loaded; else spin">
+  <div class="card" style="display: flex; justify-content: space-around; flex-direction: column;">
+
+  <div style="padding: 10px; margin:10px; background-color: rgb(246, 246, 246); border-radius: 10px;">
+    <h2>Medicamento</h2>
+    <p style="font-size: 1.2rem;"><strong>Nombre:</strong> {{medicine.name}}</p>
+    <p style="font-size: 1.2rem;"><strong>Laboratorio de fabricación:</strong> {{medicine.factoryLaboratory}}</p>
+    <p style="font-size: 1.2rem;"><strong>Fecha de fabricación:</strong> {{medicine.manufacturingDate}}</p>
+    <p style="font-size: 1.2rem;"><strong>Fecha de vencimiento:</strong> {{medicine.dueDate}}</p>
+    <p style="font-size: 1.2rem;"><strong>Stock:</strong> {{medicine.stock}}</p>
+    <p style="font-size: 1.2rem;"><strong>Precio Unitario:</strong> {{medicine.unitPrice}}</p>
+  </div>
+
+ <div style="display: flex; justify-content: center; align-items: center;">
+   <p-inputNumber
+    [(ngModel)]="quantity"
+    [showButtons]="true"
+    decrementButtonClass="p-button-danger"
+    [min]="0"
+    [max]="medicine.stock"
+  />
+ </div>
+
+ <div style="display: flex; justify-content: center; align-items: center;">
+  <p style="font-size: 1.5rem;"><strong>Total a pagar:</strong> ${{(quantity * medicine.unitPrice).toFixed(2)}}</p>
+ </div>
+
+  <div style="display: flex; justify-content: space-around; align-items: center; ">
+    <button (click)="close()" pButton type="button" label="Cancelar" class="p-button-raised p-button-rounded p-button-outlined p-button-danger"></button>
+    <button (click)="sell()" pButton type="button" label="Comprar" class="p-button-raised p-button-rounded p-button-outlined p-button-success"></button>
+  </div>
+
+</div>
+</ng-container>
+
+<ng-template #spin></ng-template>

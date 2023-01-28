@@ -19,10 +19,10 @@ public class Sale implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    // Saved as timestamp
     @Column(name = "sale_datetime")
-    @PastOrPresent
     @NotNull
-    private LocalDateTime saleDateTime;
+    private Long saleDateTime;
 
     @Column(name = "quantity")
     @Min(value = 0L)

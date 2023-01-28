@@ -1,6 +1,7 @@
 package konex.innovation.medicine_administration.controllers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class MedicineController extends ExceptionHandlerController {
             @RequestParam(value = "value", defaultValue = "") List<String> value) {
 
         Page<Medicine> medicines;
-        String[] fieldsToSort = new String[] {
+        String[] fields = new String[] {
                 "id",
                 "name",
                 "factoryLaboratory",
@@ -43,17 +44,9 @@ public class MedicineController extends ExceptionHandlerController {
                 "unitPrice"
         };
 
-        String[] fieldsToFilter = new String[] {
-                "id",
-                "name",
-                "factoryLaboratory",
-                "stock",
-                "unitPrice"
-        };
-
         // Validacion de que el campo mandado en sortBy sea alguno de los campos de la
         // entidad
-        sortBy = Arrays.stream(fieldsToSort).anyMatch(sortBy::equals) ? sortBy : "id";
+        sortBy = Arrays.stream(fields).anyMatch(sortBy::equals) ? sortBy : "id";
 
         // Validacion de que cada uno de los filtros sea alguno de los campos de la
         // entidad
@@ -61,17 +54,29 @@ public class MedicineController extends ExceptionHandlerController {
         Boolean filtersAreValid = true && filterBy.size() > 0 && filterBy.size() == value.size();
         if (filtersAreValid)
             for (String filter : filterBy) {
-                if (!(Arrays.stream(fieldsToFilter).anyMatch(filter::equals))) {
+                if (!(Arrays.stream(fields).anyMatch(filter::equals))) {
                     filtersAreValid = false;
                 }
             }
         medicines = filtersAreValid
                 ? service.list(page, offset, sortBy, filterBy, value)
-                : service.list(page, offset, sortBy);
+                : service.list(page, offset, sortBy, new ArrayList<String>(), new ArrayList<String>());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseDto(true, "Medicines List", medicines));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> getOne(@PathVariable Long id) {
+        Medicine medicine = service.findById(id);
+        if (medicine == null) {
+            return notFound(id);
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(true, null, medicine));
+
     }
 
     @PostMapping

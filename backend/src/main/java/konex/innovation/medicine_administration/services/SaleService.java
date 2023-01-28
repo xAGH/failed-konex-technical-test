@@ -21,7 +21,8 @@ public class SaleService {
 
     @Transactional(readOnly = true)
     public Page<Sale> list(Integer page, Integer offset, String sortBy) {
-        return repository.findAll(PageRequest.of(page, offset).withSort(Sort.by(sortBy)));
+        Page<Sale> sales = repository.findAll(PageRequest.of(page, offset).withSort(Sort.by(sortBy)));
+        return sales;
     }
 
     @Transactional(readOnly = true)
@@ -34,8 +35,8 @@ public class SaleService {
             Integer page,
             Integer offset,
             String sortBy,
-            LocalDateTime start,
-            LocalDateTime end) {
+            Long start,
+            Long end) {
         return repository.findBewteenDates(start, end, PageRequest.of(page, offset).withSort(Sort.by(sortBy)));
     }
 

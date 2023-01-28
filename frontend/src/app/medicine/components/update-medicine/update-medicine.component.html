@@ -1,0 +1,48 @@
+<ng-container *ngIf="loaded; else spin">
+  <div [formGroup]="form" class="card form-group">
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <input type="text" pInputText formControlName="name" />
+        <label>Nombre</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <input type="text" pInputText formControlName="factoryLaboratory" />
+        <label>Laboratorio de fabricación</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <p-calendar dateFormat="yy-mm-dd" formControlName="manufacturingDate" />
+        <label>Fecha de fabricación</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <p-calendar dateFormat="yy-mm-dd" formControlName="dueDate" />
+        <label>Fecha de vencimiento</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <p-inputNumber formControlName="stock" />
+        <label>Stock</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-4">
+      <span class="p-float-label">
+        <p-inputNumber formControlName="unitPrice" />
+        <label>Precio Unitario</label>
+      </span>
+    </div>
+
+    <div style="display: flex; justify-content: space-around; align-items: center; ">
+    <button (click)="close()" pButton type="button" label="Cancelar" class="p-button-raised p-button-rounded p-button-outlined p-button-danger"></button>
+    <button [disabled]="form.invalid" (click)="update()" pButton type="button" label="Actualizar" class="p-button-raised p-button-rounded p-button-outlined p-button-success"></button>
+  </div>
+
+  </div>
+</ng-container>
+
+<ng-template #spin></ng-template>
