@@ -13,10 +13,10 @@ import { MessageService } from 'primeng/api';
 export class SaleDialogComponent {
   loaded = false;
 
-  id = 0;
-  quantity = 0;
+  id: number;
+  quantity: number;
 
-  medicine: Medicine = null!;
+  medicine: Medicine;
 
   constructor(
     private medicineService: MedicineService,
@@ -24,7 +24,11 @@ export class SaleDialogComponent {
     private saleService: SaleService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig
-  ) {}
+  ) {
+    this.id = 0;
+    this.quantity = 0;
+    this.medicine = null!;
+  }
 
   ngOnInit() {
     this.id = this.config.data.id;
@@ -41,8 +45,7 @@ export class SaleDialogComponent {
   }
 
   sell() {
-    console.log('sell');
-    this.saleService.sell(this.medicine.id, this.quantity).subscribe({
+    this.saleService.sell(this.medicine.id!, this.quantity).subscribe({
       next: (data) => {
         if (data.status) {
           this.messageService.add({

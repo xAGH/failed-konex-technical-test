@@ -3,22 +3,24 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TableComponent } from './components/table/table.component';
-import { UpdateMedicineComponent } from './components/update-medicine/update-medicine.component';
+import { UpsertMedicineComponent } from './components/upsert-medicine/upsert-medicine.component';
 
 import { MedicineRoutingModule } from './medicine-routing.module';
-import { MessageService, SharedModule as SharedPrime } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ToastModule } from 'primeng/toast';
+import { InputMaskModule } from 'primeng/inputmask';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
-  declarations: [TableComponent, UpdateMedicineComponent],
+  declarations: [TableComponent, UpsertMedicineComponent],
   providers: [DialogService, MessageService],
   imports: [
-    SharedPrime,
+    SharedModule,
     CommonModule,
     MedicineRoutingModule,
     TableModule,
@@ -27,6 +29,8 @@ import { ToastModule } from 'primeng/toast';
     InputTextModule,
     CalendarModule,
     ToastModule,
+    InputMaskModule,
+    TooltipModule,
   ],
 })
 export class MedicineModule {}

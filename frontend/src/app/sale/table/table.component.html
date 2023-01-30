@@ -1,0 +1,79 @@
+<ng-container *ngIf="loaded; else spin">
+  <div class="card">
+    <p-table
+      [value]="pagination.data"
+      sortMode="multiple"
+      [tableStyle]="{ 'min-width': '60rem', 'min-height': '100%' }"
+    >
+      <ng-template pTemplate="header">
+        <tr [formGroup]="form">
+          <th style="width: 20%">
+            <span style="margin-right: 2rem">From</span>
+            <p-calendar
+              formControlName="startDate"
+              [showTime]="true"
+              hourFormat="24"
+              icon="pi pi-filter"
+            ></p-calendar>
+          </th>
+          <th style="width: 20%">
+            <span style="margin-right: 2rem">To</span>
+            <p-calendar
+              formControlName="endDate"
+              [showTime]="true"
+              hourFormat="24"
+              icon="pi pi-filter"
+            ></p-calendar>
+          </th>
+          <th style="width: 20%"></th>
+          <th style="width: 20%"></th>
+          <th style="width: 20%"></th>
+          <th style="width: 20%"></th>
+        </tr>
+
+        <tr>
+          <th pSortableColumn="saleDate" style="width: 20%">
+            Fecha <p-sortIcon field="saleDate"></p-sortIcon>
+          </th>
+          <th pSortableColumn="saleTime" style="width: 20%">
+            Hora <p-sortIcon field="saleTime"></p-sortIcon>
+          </th>
+          <th pSortableColumn="quantity" style="width: 20%">
+            Cantidad
+            <p-sortIcon field="quantity"></p-sortIcon>
+          </th>
+          <th pSortableColumn="unitPrice" style="width: 20%">
+            Precio unitario
+            <p-sortIcon field="unitPrice"></p-sortIcon>
+          </th>
+          <th pSortableColumn="totalPrice" style="width: 20%">
+            Precio total <p-sortIcon field="totalPrice"></p-sortIcon>
+          </th>
+          <th pSortableColumn="medicineId" style="width: 20%">
+            Medicina <p-sortIcon field="medicineId"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-sale>
+        <tr>
+          <td>{{ sale.saleDateTime | date : "yyyy-MM-dd" }}</td>
+          <td>{{ sale.saleDateTime | date : "HH:mm" }}</td>
+          <td>{{ sale.quantity }}</td>
+          <td>{{ sale.unitPrice }}</td>
+          <td>{{ sale.totalPrice }}</td>
+          <td>{{ sale.medicineName }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p-paginator
+      [rows]="pagination.rows"
+      [totalRecords]="pagination.totalElements"
+      [rowsPerPageOptions]="pagination.rowsPerPage"
+      (onPageChange)="pageChangeEvent($event)"
+    ></p-paginator>
+  </div>
+</ng-container>
+
+<ng-template #spin> </ng-template>

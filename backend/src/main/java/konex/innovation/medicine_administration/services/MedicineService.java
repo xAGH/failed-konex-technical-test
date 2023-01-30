@@ -29,7 +29,10 @@ public class MedicineService {
             Specification<Medicine> extras;
             for (Integer i = 0; i < filterBy.size(); i++) {
                 final Integer index = i;
-                extras = (db, query, field) -> field.equal(db.get(filterBy.get(index)), value.get(index));
+
+                extras = (db, query, field) -> field.like(db.get(filterBy.get(index)).as(String.class),
+                        "%" + value.get(index) + "%");
+
                 spec = spec.and(extras);
             }
         }

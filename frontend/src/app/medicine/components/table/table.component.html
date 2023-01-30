@@ -1,56 +1,113 @@
 <ng-container *ngIf="loaded; else spin">
   <div class="card">
     <p-table
-      [value]="pagination.medicines"
+      [value]="pagination.data"
       sortMode="multiple"
       [tableStyle]="{ 'min-width': '60rem' }"
     >
       <ng-template pTemplate="header">
-        <tr>
+        <tr [formGroup]="form">
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formName)"
+                [ngClass]="
+                  formName?.value ? 'pi pi-filter-slash' : 'pi pi-filter'
+                "
+              ></i>
+              <input type="text" pInputText formControlName="name" />
             </span>
           </th>
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formfactoryLaboratory)"
+                [ngClass]="
+                  formfactoryLaboratory?.value
+                    ? 'pi pi-filter-slash'
+                    : 'pi pi-filter'
+                "
+              ></i>
+              <input
+                type="text"
+                pInputText
+                formControlName="factoryLaboratory"
+              />
             </span>
           </th>
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formManufacturingDate)"
+                [ngClass]="
+                  formManufacturingDate?.value
+                    ? 'pi pi-filter-slash'
+                    : 'pi pi-filter'
+                "
+              ></i>
+              <p-inputMask
+                [readonly]="true"
+                mask="9999-99-99"
+                formControlName="manufacturingDate"
+                placeholder="AAAA-MM-DD"
+              ></p-inputMask>
             </span>
           </th>
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formdueDate)"
+                [ngClass]="
+                  formdueDate?.value ? 'pi pi-filter-slash' : 'pi pi-filter'
+                "
+              ></i>
+              <p-inputMask
+                [readonly]="true"
+                mask="9999-99-99"
+                formControlName="dueDate"
+                placeholder="AAAA-MM-DD"
+              ></p-inputMask>
             </span>
           </th>
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formStock)"
+                [ngClass]="
+                  formStock?.value ? 'pi pi-filter-slash' : 'pi pi-filter'
+                "
+              ></i>
+              <p-inputNumber formControlName="stock"></p-inputNumber>
             </span>
           </th>
           <th style="width: 20%">
-            <span class="p-input-icon-right p-float-label">
-              <i class="pi pi-filter"></i>
-              <input type="text" pInputText />
-              <label for="Lable">label</label>
+            <span class="p-input-icon-right">
+              <i
+                (click)="resetFilter(formunitPrice)"
+                [ngClass]="
+                  formunitPrice?.value ? 'pi pi-filter-slash' : 'pi pi-filter'
+                "
+              ></i>
+              <p-inputNumber
+                formControlName="unitPrice"
+                mode="decimal"
+                [maxFractionDigits]="2"
+              ></p-inputNumber>
             </span>
           </th>
           <th style="width: 20%"></th>
-          <th style="width: 20%"></th>
+          <th style="width: 20%">
+            <button
+              (click)="upsert()"
+              pTooltip="Agregar medicamento"
+              tooltipPosition="top"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-plus"
+              class="p-button-rounded p-button-success"
+            ></button>
+          </th>
           <th style="width: 20%"></th>
         </tr>
 
@@ -85,8 +142,8 @@
         <tr>
           <td>{{ medicine.name }}</td>
           <td>{{ medicine.factoryLaboratory }}</td>
-          <td>{{ medicine.manufacturingDate }}</td>
-          <td>{{ medicine.dueDate }}</td>
+          <td>{{ medicine.manufacturingDate | date : "yyyy-MM-dd" }}</td>
+          <td>{{ medicine.dueDate | date : "yyyy-MM-dd" }}</td>
           <td>{{ medicine.stock }}</td>
           <td>${{ medicine.unitPrice }}</td>
           <td style="text-align: center">
@@ -98,7 +155,7 @@
           </td>
           <td style="text-align: center">
             <i
-              (click)="edit(medicine.id)"
+              (click)="upsert(medicine.id)"
               class="pi pi-pencil"
               style="font-size: 1.5rem; color: #32b1ec; cursor: pointer"
             ></i>
@@ -154,4 +211,3 @@
     </div>
   </ng-template>
 </p-toast>
-<i class="pi pi-plus" style="color: rgb(5, 235, 5); font-size: 2.5rem"></i>

@@ -1,15 +1,23 @@
 <div class="center" style="margin: 25px auto">
   <button
+    routerLink="medicine"
+    routerLinkActive="p-button-raised"
+    #medicine="routerLinkActive"
     pButton
     label="Medicinas"
     icon="pi pi-shopping-bag"
-    class="p-button-outlined p-button-secondary"
+    class="p-button-secondary"
+    [class.p-button-outlined]="!medicine.isActive"
   ></button>
   <button
+    routerLink="sale"
+    routerLinkActive="p-button-raised"
+    #sale="routerLinkActive"
     pButton
     label="Ventas"
     icon="pi pi-shopping-cart"
-    class="p-button-outlined p-button-secondary"
+    class="p-button-secondary"
+    [class.p-button-outlined]="!sale.isActive"
   ></button>
 </div>
 <router-outlet></router-outlet>

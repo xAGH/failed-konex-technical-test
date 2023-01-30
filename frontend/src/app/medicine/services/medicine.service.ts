@@ -1,10 +1,10 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { MedicinePagination } from '../interfaces/MedicinePagination';
 import { APIResponse, ApiData } from 'src/app/interfaces/ApiResponse';
 import { HttpClientService } from 'src/app/services/http-client.service';
 import { Medicine } from '../interfaces/Medicine';
+import { Pagination } from 'src/app/interfaces/Pagination';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class MedicineService {
 
   constructor(private _httpClient: HttpClientService) {}
 
-  getMedicines(options?: MedicinePagination): Observable<ApiData> {
+  getMedicines(options?: Pagination): Observable<ApiData> {
     let params = new HttpParams();
     params = params
       .append('page', options!.page)
@@ -26,7 +26,6 @@ export class MedicineService {
         .append('filterBy', options!.filters![i])
         .append('value', options!.values![i]);
     }
-    // TODO Api status
     return this._httpClient
       .get<APIResponse<ApiData>>(this.URL, { params })
       .pipe(map((data) => data.data));
@@ -36,6 +35,10 @@ export class MedicineService {
     return this._httpClient
       .get<APIResponse<Medicine>>(this.URL + '/' + id)
       .pipe(map((data) => data.data as Medicine));
+  }
+
+  createMedicine(medicine: Medicine): Observable<APIResponse<Medicine>> {
+    return this._httpClient.post<APIResponse<Medicine>>(this.URL, medicine);
   }
 
   updateMedicine(

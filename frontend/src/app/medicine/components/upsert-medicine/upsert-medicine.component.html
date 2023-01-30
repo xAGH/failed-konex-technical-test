@@ -1,5 +1,5 @@
 <ng-container *ngIf="loaded; else spin">
-  <div [formGroup]="form" class="card form-group">
+  <div [formGroup]="form" class="card form-group center">
     <div class="field col-12 md:col-4">
       <span class="p-float-label">
         <input type="text" pInputText formControlName="name" />
@@ -32,15 +32,16 @@
     </div>
     <div class="field col-12 md:col-4">
       <span class="p-float-label">
-        <p-inputNumber formControlName="unitPrice" />
+        <p-inputNumber formControlName="unitPrice" mode="decimal"
+                [maxFractionDigits]="2"/>
         <label>Precio Unitario</label>
       </span>
     </div>
 
-    <div style="display: flex; justify-content: space-around; align-items: center; ">
-    <button (click)="close()" pButton type="button" label="Cancelar" class="p-button-raised p-button-rounded p-button-outlined p-button-danger"></button>
-    <button [disabled]="form.invalid" (click)="update()" pButton type="button" label="Actualizar" class="p-button-raised p-button-rounded p-button-outlined p-button-success"></button>
-  </div>
+    <div style="display: flex; gap:1rem ; ">
+      <button (click)="close()" pButton type="button" label="Cancelar" class="p-button-raised p-button-rounded p-button-outlined p-button-danger"></button>
+      <button [disabled]="form.invalid" (click)="upsert()" pButton type="button" label='{{id ? "Actualizar" : "Crear"}}' class="p-button-raised p-button-rounded p-button-outlined p-button-success"></button>
+    </div>
 
   </div>
 </ng-container>

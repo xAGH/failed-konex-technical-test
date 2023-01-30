@@ -1,11 +1,9 @@
 package konex.innovation.medicine_administration.controllers;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import com.github.javafaker.Faker;
 import jakarta.annotation.Resource;
 import konex.innovation.medicine_administration.domain.Medicine;
@@ -42,10 +40,8 @@ public class MockController extends ExceptionHandlerController {
             Medicine medicine = new Medicine();
             medicine.setName(faker.name().lastName());
             medicine.setFactoryLaboratory(faker.company().name());
-            medicine.setManufacturingDate(
-                    faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toEpochSecond());
-            medicine.setDueDate(
-                    faker.date().future(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toEpochSecond());
+            medicine.setManufacturingDate(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)); // Random second
+            medicine.setDueDate(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)); // Random second
             medicine.setStock(rand(200, 400));
             medicine.setUnitPrice(new Random().nextDouble(1000, 10000));
             medicineData.add(medicine);
@@ -55,13 +51,7 @@ public class MockController extends ExceptionHandlerController {
         ArrayList<Sale> saleData = new ArrayList<Sale>();
         for (int i = 0; i < saleDataQuantity; i++) {
             Sale sale = new Sale();
-            sale.setSaleDateTime(LocalDateTime.of(
-                    rand(2020, 2022), // Random year
-                    rand(1, 12), // Random month
-                    rand(1, 28), // Random day
-                    rand(1, 24), // Random hour
-                    rand(1, 60), // Random minute
-                    rand(1, 60)).toEpochSecond(ZoneOffset.UTC)); // Random second
+            sale.setSaleDateTime(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)); // Random second
             sale.setQuantity(rand(1, 20));
             sale.setUnitPrice(Precision.round(new Random().nextDouble(1000, 10000), 3));
             sale.setTotalPrice(sale.getUnitPrice() * sale.getQuantity());

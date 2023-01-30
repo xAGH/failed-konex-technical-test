@@ -5,9 +5,10 @@ import { TablePagination } from 'src/app/interfaces/TablePagination';
 import { PageOnChangeEvent } from '../../interfaces/PageOnChangeEvent';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SaleDialogComponent } from '../../../sale/components/sale-dialog/sale-dialog.component';
-import { UpdateMedicineComponent } from '../update-medicine/update-medicine.component';
+import { UpsertMedicineComponent } from '../upsert-medicine/upsert-medicine.component';
 import { MessageService } from 'primeng/api';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -16,16 +17,20 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class TableComponent {
   pagination: TablePagination = {
-    medicines: [],
+    data: [],
     rowsPerPage: [10, 25, 50],
     totalElements: 0,
     rows: 10,
     currentPage: 0,
+    filters: [],
+    values: [],
   };
 
   loaded: boolean;
 
   form: FormGroup;
+
+  formChangeSuscription$: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -35,17 +40,40 @@ export class TableComponent {
   ) {
     this.loaded = false;
     this.form = this.fb.group({
-      name: '',
-      factoryLaboratory: '',
-      manufacturingDate: '',
-      dueDate: '',
-      stock: '',
-      unitPrice: '',
+      name: null,
+      factoryLaboratory: null,
+      manufacturingDate: null,
+      dueDate: null,
+      stock: null,
+      unitPrice: null,
     });
+
+    this.formChangeSuscription$ = this.form.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((data) => {
+        this.pagination.filters = [];
+        this.pagination.values = [];
+
+        for (const key of Object.keys(data)) {
+          if (data[key] != '' && data[key] != null) {
+            if (['manufacturingDate', 'dueDate'].includes(data[key])) {
+              data[key] = new Date(data[key]).getTime();
+            }
+            this.pagination.filters.push(key);
+            this.pagination.values.push(data[key]);
+          }
+        }
+        this.changeData();
+        console.log(this.pagination);
+      });
   }
 
   ngOnInit() {
     this.changeData();
+  }
+
+  ngOnDestroy() {
+    this.formChangeSuscription$.unsubscribe();
   }
 
   pageChangeEvent(event: PageOnChangeEvent) {
@@ -61,12 +89,12 @@ export class TableComponent {
         page: this.pagination.currentPage,
         offset: this.pagination.rows,
         sortBy: 'id',
-        filters: [],
-        values: [],
+        filters: this.pagination.filters,
+        values: this.pagination.values,
       })
       .subscribe({
         next: (data) => {
-          this.pagination.medicines = data.content as Medicine[];
+          this.pagination.data = data.content as Medicine[];
           this.pagination.totalElements = data.totalElements;
         },
       });
@@ -84,13 +112,15 @@ export class TableComponent {
       .onClose.subscribe(() => this.changeData());
   }
 
-  public edit(id: number) {
+  public upsert(id?: number) {
     this.dialogService
-      .open(UpdateMedicineComponent, {
+      .open(UpsertMedicineComponent, {
         data: {
           id,
         },
-        header: 'Actualización de medicamento',
+        width: '35%',
+        height: '80%',
+        header: `${id ? 'Actualización de ' : 'Crear'} medicamento`,
       })
       .onClose.subscribe(() => this.changeData());
   }
@@ -99,6 +129,7 @@ export class TableComponent {
     this.messageService.clear();
     this.messageService.add({
       key: 'c',
+      life: 1000 * 360,
       summary: '¿Desea eliminar el medicamento?',
       contentStyleClass: 'delete-toast',
       data: id,
@@ -123,7 +154,33 @@ export class TableComponent {
       },
     });
   }
+
   public onReject() {
     this.messageService.clear();
+  }
+
+  resetFilter(control: AbstractControl | null) {
+    if (control != null) {
+      control.setValue(null);
+    }
+  }
+
+  get formName(): AbstractControl | null {
+    return this.form.controls['name'];
+  }
+  get formfactoryLaboratory(): AbstractControl | null {
+    return this.form.controls['factoryLaboratory'];
+  }
+  get formManufacturingDate(): AbstractControl | null {
+    return this.form.controls['manufacturingDate'];
+  }
+  get formdueDate(): AbstractControl | null {
+    return this.form.controls['dueDate'];
+  }
+  get formStock(): AbstractControl | null {
+    return this.form.controls['stock'];
+  }
+  get formunitPrice(): AbstractControl | null {
+    return this.form.controls['unitPrice'];
   }
 }
